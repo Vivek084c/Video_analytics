@@ -1,1 +1,7 @@
 .venv
+RoundaboutHD/
+
+.DS_Store
+digital_fence_analytics.json
+
+output_fence.mp4
