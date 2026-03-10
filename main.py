@@ -2,21 +2,21 @@ import cv2
 import numpy as np
 import json
 from collections import defaultdict
-
+from src.utils.json_utils import load_json
 # -------------------------
 # CONFIG
 # -------------------------
+config_json = load_json("config/config_files.json")["main.py"]
 
-GT_FILE = "RoundaboutHD/Multi_CAM_Ground_Turth.txt"
 
 VIDEO_PATHS = {
-    1: "RoundaboutHD/imagesc001/video.mp4",
-    2: "RoundaboutHD/imagesc002/video.mp4"
+    i+1: x for i, x in enumerate(config_json["VIDEO_PATHS"])
 }
 
-TARGET_OBJECT = 432
-OUTPUT_VIDEO = "output_fence.mp4"
-OUTPUT_JSON = "digital_fence_analytics.json"
+GT_FILE = config_json["GT_FILE"]
+TARGET_OBJECT = config_json["TARGET_OBJECT"]
+OUTPUT_VIDEO = config_json["OUTPUT_VIDEO"]
+OUTPUT_JSON = config_json["OUTPUT_JSON"]
 
 
 # -------------------------
@@ -24,13 +24,10 @@ OUTPUT_JSON = "digital_fence_analytics.json"
 # -------------------------
 
 def parse_ground_truth(gt_file):
-
     data = defaultdict(list)
-
     with open(gt_file) as f:
 
         for line in f:
-
             cam, obj, frame, x, y, w, h, _, _ = map(float, line.split())
 
             cam = int(cam)
@@ -38,23 +35,23 @@ def parse_ground_truth(gt_file):
             frame = int(frame)
 
             if obj == TARGET_OBJECT:
-
                 data[(cam, frame)].append(
                     (obj, int(x), int(y), int(w), int(h))
                 )
-
     return data
+
 
 
 # -------------------------
 # Fence Structures
 # -------------------------
 
-fences = {1: [], 2: []}
-drawing_points = []
-
 entry_counts = defaultdict(int)
 exit_counts = defaultdict(int)
+
+fences = {i+1: [] for i in range(len(VIDEO_PATHS)) }
+drawing_points = []
+
 
 object_current_fence = {}
 transitions = []
@@ -65,13 +62,11 @@ fence_usage = defaultdict(list)
 
 
 # -------------------------
-# Mouse Callback
+# Mouse Callback 
 # -------------------------
 
 def mouse_callback(event, x, y, flags, param):
-
     global drawing_points
-
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing_points.append((x, y))
 
@@ -83,7 +78,6 @@ def mouse_callback(event, x, y, flags, param):
 def assign_fence_type():
 
     while True:
-
         choice = input("\nAssign fence type (e=entry, x=exit): ").strip().lower()
 
         if choice == "e":
@@ -216,6 +210,10 @@ def main():
     cam2.set(cv2.CAP_PROP_POS_FRAMES,0)
 
     frame_id = 0
+
+    # -------------------------
+    # Tracking
+    # -------------------------
 
     while True:
 
