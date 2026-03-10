@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from src.utils.segment_utils import get_segments
+from src.utils.segment_utils import get_segments, find_segment
 
 
 router = APIRouter()
@@ -87,7 +87,7 @@ def where_object_at_frame(object_id: int, frame: int):
 
     obj_id = str(object_id)
 
-    seg = find_segment(obj_id, frame)
+    seg = find_segment(objects, obj_id, frame)
 
     if seg is None:
         raise HTTPException(

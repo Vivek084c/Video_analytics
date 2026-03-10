@@ -274,7 +274,6 @@ document.getElementById('btnListFences')?.addEventListener('click', async () => 
 
 document.getElementById('btnFenceUsage')?.addEventListener('click', async () => {
     const fenceId = document.getElementById('fenceId').value.trim();
-    
     if (!fenceId) {
         showResult('fenceResult', formatError('Please enter a Fence ID'));
         return;
@@ -291,9 +290,9 @@ document.getElementById('btnFenceUsage')?.addEventListener('click', async () => 
             html += '<table class="data-table"><thead><tr><th>Object ID</th><th>Timestamp</th><th>Event Type</th></tr></thead><tbody>';
             data.usage.forEach(event => {
                 html += `<tr>
-                    <td>${event.object_id || 'N/A'}</td>
-                    <td>${event.timestamp || 'N/A'}</td>
-                    <td>${event.event_type || 'N/A'}</td>
+                    <td>${event.object_id ?? 'N/A'}</td>
+                    <td>${event.frame ?? 'N/A'}</td>
+                    <td>${event.event ?? 'N/A'}</td>
                 </tr>`;
             });
             html += '</tbody></table>';
@@ -328,12 +327,12 @@ document.getElementById('btnGateSequence')?.addEventListener('click', async () =
             html += formatInfo('No gate activity found');
         } else {
             html += '<table class="data-table"><thead><tr><th>Gate</th><th>Frame</th><th>Event Type</th><th>Timestamp</th></tr></thead><tbody>';
-            data.gate_sequence.forEach(event => {
+            data.gate_sequence.forEach(events => {
                 html += `<tr>
-                    <td>${event.gate_id || 'N/A'}</td>
-                    <td>${event.frame || 'N/A'}</td>
-                    <td>${event.event_type || 'N/A'}</td>
-                    <td>${event.timestamp || 'N/A'}</td>
+                    <td>${events.fence ?? 'N/A'}</td>
+                    <td>${events.frame ?? 'N/A'}</td>
+                    <td>${events.event ?? 'N/A'}</td>
+                    <td>${events.frame ?? 'N/A'}</td>
                 </tr>`;
             });
             html += '</tbody></table>';
