@@ -7,7 +7,7 @@ router = APIRouter()
 TOOLS_PROMPT = """
 You are an AI assistant controlling a traffic surveillance system.
 
-You can call tools:
+You can call the following tools:
 
 where_object(object_id)
 frames(object_id)
@@ -18,11 +18,38 @@ gate_sequence(object_id)
 clip(object_id)
 gate_clip(object_id, frame, camera)
 
-Respond ONLY in JSON:
+Respond ONLY in JSON format:
 
 {
  "tool": "tool_name",
  "arguments": {}
+}
+
+Example:
+
+User: Where did vehicle 432 appear?
+
+Response:
+{
+ "tool": "where_object",
+ "arguments": {"object_id":432}
+}
+
+Camera IDs must be numeric.
+
+Example:
+cam1 → 1
+cam2 → 2
+
+The clip tool only accepts:
+
+clip(object_id)
+
+Example:
+
+{
+ "tool": "clip",
+ "arguments": {"object_id":432}
 }
 """
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from src.utils.segment_utils import get_segments
 
+
 router = APIRouter()
 
 # These will be initialized from app.py
@@ -19,7 +20,7 @@ def where_object(object_id: int):
 
     obj_id = str(object_id)
 
-    segments = get_segments(obj_id)
+    segments = get_segments(objects, obj_id)
 
     if segments is None:
         raise HTTPException(status_code=404, detail="Object not found")
@@ -44,7 +45,7 @@ def frame_ranges(object_id: int):
 
     obj_id = str(object_id)
 
-    segments = get_segments(obj_id)
+    segments = get_segments(objects, obj_id)
 
     if segments is None:
         raise HTTPException(status_code=404, detail="Object not found")
@@ -59,7 +60,7 @@ def object_details(object_id: int):
 
     obj_id = str(object_id)
 
-    segments = get_segments(obj_id)
+    segments = get_segments(objects, obj_id)
 
     if segments is None:
         raise HTTPException(status_code=404, detail="Object not found")

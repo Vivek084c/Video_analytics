@@ -1,0 +1,15 @@
+{
+    "main.py":
+    {
+    "GT_FILE" : "RoundaboutHD/Multi_CAM_Ground_Turth.txt",
+    "TARGET_OBJECT" : 432,
+    "VIDEO_PATHS" : ["RoundaboutHD/imagesc001/video.mp4", "RoundaboutHD/imagesc002/video.mp4"],
+    "OUTPUT_VIDEO" : "output_fence.mp4",
+    "OUTPUT_JSON" : "digital_fence_analytics.json"
+    },
+    "app.py":
+    {
+        "TRACKING_METADATA" : "video_analytics.json",
+        "FENCE_METADATA" :"digital_fence_analytics.json"
+    }
+}
