@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Analytics Query API</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎥 Video Analytics Dashboard</h1>
+                <p class="subtitle">Roundabout Traffic Surveillance System</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-button active" data-tab="chat">🤖 AI Chat</button>
+            <button class="tab-button" data-tab="objects">🚗 Objects</button>
+            <button class="tab-button" data-tab="fences">🚧 Fences</button>
+            <button class="tab-button" data-tab="gates">🚪 Gates</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Chat Tab -->
+            <section id="chat" class="tab-content active">
+                <div class="card">
+                    <h2>Ask Anything About Your Traffic Data</h2>
+                    <p class="hint">Natural language queries powered by AI</p>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message bot-message">
+                                <strong>Assistant:</strong> Ask me about vehicles, tracking data, fences, or gates!
+                            </div>
+                        </div>
+                        <div class="chat-input-group">
+                            <input 
+                                type="text" 
+                                id="chatInput" 
+                                placeholder="e.g., Where did vehicle 432 appear? Show me a clip of vehicle 432."
+                                class="chat-input"
+                            >
+                            <button id="chatSendBtn" class="button button-primary">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Objects Tab -->
+            <section id="objects" class="tab-content">
+                <div class="card">
+                    <h2>Vehicle/Object Tracking</h2>
+                    
+                    <div class="form-group">
+                        <label for="objectId">Object ID:</label>
+                        <input type="number" id="objectId" placeholder="Enter object ID (e.g., 432)" class="input-field">
+                        <div class="button-group">
+                            <button id="btnWhere" class="button button-secondary">Where</button>
+                            <button id="btnFrames" class="button button-secondary">Frames</button>
+                            <button id="btnDetails" class="button button-secondary">Details</button>
+                            <button id="btnClip" class="button button-primary">Get Clip</button>
+                        </div>
+                    </div>
+
+                    <div id="objectResult" class="result-container"></div>
+                </div>
+
+                <div class="card">
+                    <h2>Frame Lookup</h2>
+                    <div class="form-group">
+                        <label for="lookupObjectId">Object ID:</label>
+                        <input type="number" id="lookupObjectId" placeholder="Object ID" class="input-field">
+                        
+                        <label for="lookupFrame">Frame Number:</label>
+                        <input type="number" id="lookupFrame" placeholder="Frame number" class="input-field">
+                        
+                        <button id="btnLookup" class="button button-primary">Lookup Position</button>
+                    </div>
+                    <div id="lookupResult" class="result-container"></div>
+                </div>
+            </section>
+
+            <!-- Fences Tab -->
+            <section id="fences" class="tab-content">
+                <div class="card">
+                    <h2>Digital Fence Analytics</h2>
+                    
+                    <div class="form-group">
+                        <button id="btnListFences" class="button button-primary">List All Fences</button>
+                    </div>
+                    <div id="fencesList" class="result-container"></div>
+                </div>
+
+                <div class="card">
+                    <h2>Fence Usage Details</h2>
+                    <div class="form-group">
+                        <label for="fenceId">Fence ID:</label>
+                        <input type="text" id="fenceId" placeholder="Enter fence ID" class="input-field">
+                        <button id="btnFenceUsage" class="button button-primary">Get Usage</button>
+                    </div>
+                    <div id="fenceResult" class="result-container"></div>
+                </div>
+            </section>
+
+            <!-- Gates Tab -->
+            <section id="gates" class="tab-content">
+                <div class="card">
+                    <h2>Gate Entry/Exit Tracking</h2>
+                    
+                    <div class="form-group">
+                        <label for="gateObjectId">Object ID:</label>
+                        <input type="number" id="gateObjectId" placeholder="Object ID" class="input-field">
+                        <button id="btnGateSequence" class="button button-primary">Get Gate Sequence</button>
+                    </div>
+                    <div id="gateSequenceResult" class="result-container"></div>
+                </div>
+
+                <div class="card">
+                    <h2>Gate Clip</h2>
+                    <div class="form-group">
+                        <label for="gateClipObjectId">Object ID:</label>
+                        <input type="number" id="gateClipObjectId" placeholder="Object ID" class="input-field">
+                        
+                        <label for="gateClipFrame">Frame Number:</label>
+                        <input type="number" id="gateClipFrame" placeholder="Frame number" class="input-field">
+                        
+                        <label for="gateClipCamera">Camera ID:</label>
+                        <input type="number" id="gateClipCamera" placeholder="Camera ID (1 or 2)" class="input-field">
+                        
+                        <button id="btnGateClip" class="button button-primary">Get Gate Clip</button>
+                    </div>
+                    <div id="gateClipResult" class="result-container"></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Video Player Modal -->
+        <div id="videoModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <video id="videoPlayer" controls></video>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
