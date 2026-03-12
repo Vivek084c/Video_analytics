@@ -514,6 +514,29 @@ label {
     background-color: var(--bg-color);
 }
 
+.details-container {
+    background-color: var(--bg-color);
+    padding: 16px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+    margin-top: 12px;
+}
+
+.details-container p {
+    margin: 8px 0;
+    line-height: 1.8;
+}
+
+.bot-message .data-table {
+    font-size: 0.95rem;
+    margin: 12px 0;
+}
+
+.bot-message pre {
+    font-size: 0.85rem;
+    max-height: 400px;
+}
+
 /* ====================================
    Responsive Design
    ==================================== */

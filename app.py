@@ -3,6 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from src.utils.json_utils import load_json
+from src.services.tool_executor import execute_tool
+
 config_json = load_json("config/config_files.json")["app.py"]
 TRACKING_METADATA = config_json["TRACKING_METADATA"]
 FENCE_METADATA = config_json["FENCE_METADATA"]
@@ -35,6 +37,8 @@ object_router.init_router(objects, fps)
 fence_router.init_router(fence_usage)
 clip_router.init_router(objects, fps)
 gate_router.init_router(vehicle_history, objects, fps)
+chat_router.init_router(execute_tool)
+
 # chat_router.init_router commented out - tool executor not yet implemented
 # chat_router.init_router(tool_executor)
 

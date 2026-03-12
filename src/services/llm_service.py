@@ -1,10 +1,11 @@
 import ollama
-from config.settings import OLLAMA_MODEL
+from src.utils.json_utils import load_json
+config_json = load_json("config/config_files.json")["app.py"]
 
 def run_llm(query, system_prompt):
 
     response = ollama.chat(
-        model=OLLAMA_MODEL,
+        model=config_json["OLLAMA_MODEL"],
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": query}

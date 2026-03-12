@@ -371,6 +371,131 @@ document.getElementById('btnGateClip')?.addEventListener('click', async () => {
 });
 
 /* ====================================
+   Chat Interface - Formatting Functions
+   ==================================== */
+
+function formatGateSequence(result) {
+    if (!result.gate_sequence || result.gate_sequence.length === 0) {
+        return `<p><strong>Object ID: ${result.object_id}</strong> - No gate sequences found</p>`;
+    }
+    
+    let html = `<p><strong>Object ID: ${result.object_id}</strong></p>`;
+    html += '<table class="data-table"><thead><tr><th>Camera</th><th>Fence</th><th>Event</th><th>Frame</th></tr></thead><tbody>';
+    
+    result.gate_sequence.forEach(seq => {
+        const eventColor = seq.event === 'entry' ? '🔵 Entry' : '🔴 Exit';
+        html += `<tr><td>Camera ${seq.camera}</td><td>${seq.fence}</td><td>${eventColor}</td><td>${seq.frame}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    return html;
+}
+
+function formatWhereObject(result) {
+    if (!result.cameras || result.cameras.length === 0) {
+        return `<p><strong>Object ID: ${result.object_id}</strong> - Not found in any camera</p>`;
+    }
+    
+    let html = `<p><strong>Object ID: ${result.object_id}</strong></p>`;
+    html += '<table class="data-table"><thead><tr><th>Camera</th><th>Frames</th></tr></thead><tbody>';
+    
+    result.cameras.forEach(cam => {
+        html += `<tr><td>Camera ${cam.camera}</td><td>${cam.frames.join(', ')}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    return html;
+}
+
+function formatFrameRanges(result) {
+    if (!result.frames || result.frames.length === 0) {
+        return `<p><strong>Object ID: ${result.object_id}</strong> - No frame ranges found</p>`;
+    }
+    
+    let html = `<p><strong>Object ID: ${result.object_id}</strong></p>`;
+    html += '<table class="data-table"><thead><tr><th>Camera</th><th>Start Frame</th><th>End Frame</th><th>Duration (frames)</th></tr></thead><tbody>';
+    
+    result.frames.forEach(frame => {
+        const duration = frame.end_frame - frame.start_frame;
+        html += `<tr><td>Camera ${frame.camera}</td><td>${frame.start_frame}</td><td>${frame.end_frame}</td><td>${duration}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    return html;
+}
+
+function formatObjectDetails(result) {
+    let html = '<div class="details-container">';
+    html += `<p><strong>Object ID:</strong> ${result.object_id}</p>`;
+    html += `<p><strong>Class:</strong> ${result.class}</p>`;
+    
+    if (result.cameras) {
+        html += '<p><strong>Cameras:</strong> ';
+        html += result.cameras.map(c => `Camera ${c}`).join(', ');
+        html += '</p>';
+    }
+    
+    if (result.total_frames !== undefined) {
+        html += `<p><strong>Total Frames:</strong> ${result.total_frames}</p>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+function formatFenceUsage(result) {
+    if (!result.crossings || result.crossings.length === 0) {
+        return `<p><strong>Fence ID: ${result.fence_id}</strong> - No crossings logged</p>`;
+    }
+    
+    let html = `<p><strong>Fence ID: ${result.fence_id}</strong></p>`;
+    html += `<p><strong>Total Crossings:</strong> ${result.crossings.length}</p>`;
+    html += '<table class="data-table"><thead><tr><th>Object ID</th><th>Event</th><th>Frame</th><th>Camera</th></tr></thead><tbody>';
+    
+    result.crossings.forEach(crossing => {
+        const eventColor = crossing.event === 'entry' ? '🔵 Entry' : '🔴 Exit';
+        html += `<tr><td>${crossing.object_id}</td><td>${eventColor}</td><td>${crossing.frame}</td><td>Camera ${crossing.camera}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    return html;
+}
+
+function formatFrameLookup(result) {
+    let html = `<p><strong>Object ID: ${result.object_id}</strong> at <strong>Frame: ${result.frame}</strong></p>`;
+    
+    if (result.position) {
+        html += '<table class="data-table"><thead><tr><th>Camera</th><th>X</th><th>Y</th><th>Width</th><th>Height</th></tr></thead><tbody>';
+        html += `<tr><td>Camera ${result.position.camera}</td><td>${result.position.x}</td><td>${result.position.y}</td><td>${result.position.w}</td><td>${result.position.h}</td></tr>`;
+        html += '</tbody></table>';
+    } else {
+        html += '<p>Position not found in this frame</p>';
+    }
+    
+    return html;
+}
+
+function formatToolResult(toolName, result) {
+    switch(toolName) {
+        case 'gate_sequence':
+            return formatGateSequence(result);
+        case 'where_object':
+            return formatWhereObject(result);
+        case 'frames':
+            return formatFrameRanges(result);
+        case 'details':
+            return formatObjectDetails(result);
+        case 'fence_usage':
+            return formatFenceUsage(result);
+        case 'frame_lookup':
+            return formatFrameLookup(result);
+        default:
+            // Fallback to formatted JSON
+            return `<pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(result, null, 2)}</pre>`;
+    }
+}
+
+/* ====================================
    Chat Interface
    ==================================== */
 
@@ -414,8 +539,8 @@ async function sendChatMessage() {
         let botResponse = '';
         
         if (response.tool_used) {
-            botResponse = `Used tool: <strong>${response.tool_used}</strong>\n\n`;
-            botResponse += `Result: ${JSON.stringify(response.result, null, 2)}`;
+            botResponse = `Used tool: <strong>${response.tool_used}</strong><br><br>`;
+            botResponse += formatToolResult(response.tool_used, response.result);
         } else if (response.llm_response) {
             botResponse = response.llm_response;
         }

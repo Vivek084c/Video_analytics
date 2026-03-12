@@ -63,24 +63,31 @@ def init_router(tool_executor):
 async def chat(request: Request):
 
     data = await request.json()
-
     query = data.get("query")
 
     llm_output = run_llm(query, TOOLS_PROMPT)
 
     try:
-
         tool_call = json.loads(llm_output)
-
+        # -----------------------------
+        # Execute tool
+        # -----------------------------
         result = execute_tool(tool_call)
 
         return {
-            "tool_used": tool_call["tool"],
+            "tool_used": tool_call.get("tool"),
             "result": result
         }
 
-    except Exception:
-
+    except json.JSONDecodeError:
+        # LLM responded in natural language instead of tool JSON
         return {
             "llm_response": llm_output
+        }
+
+    except Exception as e:
+        # Any other runtime issue
+        return {
+            "error": str(e),
+            "raw_llm_output": llm_output
         }
