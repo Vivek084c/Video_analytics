@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 import cv2
 import os
-from config.settings import VIDEO_PATHS, CLIP_OUTPUT_DIR
+from config.settings import VIDEO_PATHS
+from src.utils.json_utils import load_json
 
 router = APIRouter()
 
@@ -73,14 +74,16 @@ def gate_clip(object_id: int, frame: int, camera: int):
     start = max(frame - 30, segment["start_frame"])
     end = min(frame + 30, segment["end_frame"])
 
-    os.makedirs(CLIP_OUTPUT_DIR, exist_ok=True)
+    config_json = load_json("config/config_files.json")["app.py"]
+    clip_output_dir = config_json.get("CLIP_OUTPUT_DIR", "clips")
+    os.makedirs(clip_output_dir, exist_ok=True)
 
-    out_path = f"{CLIP_OUTPUT_DIR}/gate_{object_id}_{frame}.mp4"
+    out_path = f"{clip_output_dir}/gate_{object_id}_{frame}.mp4"
 
     cap = cv2.VideoCapture(video_path)
     cap.set(cv2.CAP_PROP_POS_FRAMES, start)
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     out = None
 
     current = start

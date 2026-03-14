@@ -224,7 +224,7 @@ def main():
 
     max_frames = fps * 60
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
 
     video_out = cv2.VideoWriter(
         OUTPUT_VIDEO,
@@ -293,10 +293,22 @@ def main():
             for obj,x,y,w,h in data[(cam_id,frame_id)]:
                 if obj != TARGET_OBJECT and track_specific:
                     continue
+
                 cx = int(x + w/2)
                 cy = int(y + h)
 
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
+
+                label = f"ID {obj}"
+                cv2.putText(
+                    frame,
+                    label,
+                    (x, y - 10),  # position above bounding box
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6,
+                    (0,255,0),
+                    2
+                )
 
                 cv2.circle(frame,(cx,cy),4,(0,0,255),-1)
 
