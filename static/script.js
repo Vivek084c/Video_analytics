@@ -476,6 +476,11 @@ function formatFrameLookup(result) {
 }
 
 function formatToolResult(toolName, result) {
+    // Handle video clip responses
+    if ((toolName === 'clip' || toolName === 'gate_clip') && result && result.type === 'video_clip') {
+        return `<div style="margin: 10px 0;"><button class="button button-primary" onclick="playVideo('${result.clip_url}')">▶ Play Video Clip (Object ${result.object_id})</button></div>`;
+    }
+    
     switch(toolName) {
         case 'gate_sequence':
             return formatGateSequence(result);

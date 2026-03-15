@@ -22,5 +22,8 @@ def get_object_clip(object_id: int):
         raise HTTPException(status_code=404, detail="Object not found")
 
     return {
-        "clip_url": f"/{clip_path}"
+        "type": "video_clip",
+        "object_id": object_id,
+        "clip_url": f"/{clip_path}",
+        "playable": True
     }

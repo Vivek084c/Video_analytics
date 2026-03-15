@@ -16,7 +16,7 @@ def generate_object_clip(object_id, objects, fps):
 
     final_path = f"{CLIP_OUTPUT_DIR}/object_{object_id}.mp4"
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
 
     out = None
 

@@ -131,5 +131,8 @@ def gate_clip(object_id: int, frame: int, camera: int):
         out.release()
 
     return {
-        "clip_url": f"/{out_path}"
+        "type": "video_clip",
+        "object_id": object_id,
+        "clip_url": f"/{out_path}",
+        "playable": True
     }
